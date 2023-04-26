@@ -9,3 +9,4 @@ group:
       # release docs
       - source: .github/sync/RELEASE.md
         dest: RELEASE.md
+        template: true
