@@ -1,0 +1,21 @@
+name: Sync
+
+on:
+  # NOTE: github.event is workflow_dispatch payload:
+  # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch
+  workflow_dispatch:
+
+jobs:
+  sync:
+    if: '!github.event.repository.fork'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: kenodegard/repo-file-sync-action@template-constants
+        with:
+          GH_PAT: ${{ secrets.SYNC_TOKEN }}
+          PR_LABELS: false
+          CONFIG_PATH: .github/sync/config.yml
+          COMMIT_EACH_FILE: false
+          GIT_USERNAME: Conda Bot
+          GIT_EMAIL: conda-bot@users.noreply.github.com
