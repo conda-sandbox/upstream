@@ -41,7 +41,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           push-to-fork: conda-bot/${{ github.event.repository.name }}
-          token: ${{ secrets.UPDATE_TOKEN }}
+          token: ${{ github.token }}
           branch: update
           delete-branch: true
           title: 🤖 Update
