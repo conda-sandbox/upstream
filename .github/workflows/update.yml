@@ -13,6 +13,11 @@ on:
     types:
       - created
 
+env:
+  GIT_TRACE: 1
+  GIT_TRANSFER_TRACE: 1
+  GIT_CURL_VERBOSE: 1
+
 jobs:
   update:
     if: >-
@@ -63,7 +68,7 @@ jobs:
       - if: github.event_name == 'issue_comment'
         run: |
           git config --local --list
-          GIT_TRACE=1 GIT_TRANSFER_TRACE=1 GIT_CURL_VERBOSE=1 git \
+          git \
             -c "http.https://github.com/.extraheader=" \
             -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
             push https://github.com/${{ env.REPOSITORY }}
