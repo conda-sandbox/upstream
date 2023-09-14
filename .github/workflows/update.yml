@@ -62,10 +62,7 @@ jobs:
 
       - if: github.event_name == 'issue_comment'
         run: |
-          git \
-            -c "http.https://github.com/.extraheader=" \
-            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: basic ${{ secrets.SYNC_TOKEN }}" \
-            push --force-with-lease https://github.com/${{ env.REPOSITORY }}
+          git push --force-with-lease https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ env.REPOSITORY }}.git
 
       - if: github.event_name != 'issue_comment'
         name: create update PR
