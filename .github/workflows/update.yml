@@ -29,7 +29,16 @@ jobs:
     steps:
       - uses: crazy-max/ghaction-dump-context@v1
 
+      - if: github.event.issue.pull_request && github.event.comment.body == '@conda-bot render'
+        run: |
+          REPOSITORY=$(curl --quiet ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
+          REF=$(curl --quiet ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
+          cat $GITHUB_ENV
+
       - uses: actions/checkout@v3
+        with:
+          repository: ${{ env.REPOSITORY || github.repository }}
+          ref: ${{ env.REF || '' }}
 
       - name: configure git user
         run: |
