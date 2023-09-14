@@ -31,6 +31,9 @@ jobs:
 
       - if: github.event.issue.pull_request && github.event.comment.body == '@conda-bot render'
         run: |
+          curl --silent ${{ github.event.issue.pull_request.url }}
+          curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name'
+          curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref'
           REPOSITORY=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
           REF=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
           cat $GITHUB_ENV
