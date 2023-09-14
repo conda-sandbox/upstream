@@ -61,7 +61,10 @@ jobs:
         run: git add . && git commit --message "Sync files" || true
 
       - if: github.event_name == 'issue_comment'
-        run: git push 
+        run: |
+          git config --local --list
+          git remote -vv
+          git push 
 
       - if: github.event_name != 'issue_comment'
         name: create update PR
