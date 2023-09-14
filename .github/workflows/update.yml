@@ -64,7 +64,7 @@ jobs:
         run: |
           git \
             -c "http.https://github.com/.extraheader=" \
-            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
+            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: basic ${{ secrets.SYNC_TOKEN }}" \
             push --force-with-lease https://github.com/${{ env.REPOSITORY }}
 
       - if: github.event_name != 'issue_comment'
