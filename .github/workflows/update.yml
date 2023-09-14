@@ -60,13 +60,3 @@ jobs:
       #       [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
       #       This PR was created automatically by the [`update.yml`][update.yml] workflow.
-
-  render:
-    if: >-
-      !github.event.repository.fork
-      && (
-        github.event.issue.pull_request
-        && github.event.comment.body == '@conda-bot render'
-      )
-    runs-on: ubuntu-latest
-    steps:
