@@ -29,13 +29,13 @@ jobs:
         uses: conda/actions/combine-durations@combine-durations
 
       - name: commit updated durations
-        run: git commit --all --message "Update test durations" || true
+        run: git add . && git commit --message "Update test durations" || true
 
       - name: sync & template files
         uses: conda/actions/template-files@template-files
 
       - name: commit templated files
-        run: git commit --all --message "Sync files" || true
+        run: git add . && git commit --message "Sync files" || true
 
       - name: create update PR
         uses: peter-evans/create-pull-request@v5
