@@ -16,7 +16,7 @@ conda/infrastructure:
     dst: .github/PULL_REQUEST_TEMPLATE.md
   - src: .github/sync/TEMPLATE
     dst: news/TEMPLATE
-conda-sandbox/infrastructure-not:
+conda-sandbox/infrastructure:
   - .github/workflows/update.yml
   - src: .github/sync/rever.xsh
     dst: rever.xsh
