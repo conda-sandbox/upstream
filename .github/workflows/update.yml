@@ -63,7 +63,10 @@ jobs:
       - if: github.event_name == 'issue_comment'
         run: |
           git config --local --list
-          git push --force-with-lease -vvv
+          GIT_TRACE=1 GIT_TRANSFER_TRACE=1 GIT_CURL_VERBOSE=1 git \
+            -c "http.https://github.com/.extraheader=" \
+            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
+            push https://github.com/${{ env.REPOSITORY }}
 
       - if: github.event_name != 'issue_comment'
         name: create update PR
