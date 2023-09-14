@@ -18,7 +18,7 @@ conda/infrastructure:
     dst: news/TEMPLATE
 conda-sandbox/infrastructure:
   - .github/workflows/update.yml
-  - src: .github/sync/rever.xsh
+  - src: .github/template/rever.xsh
     dst: rever.xsh
-  - src: .github/sync/RELEASE.md
+  - src: .github/template/RELEASE.md
     dst: RELEASE.md
