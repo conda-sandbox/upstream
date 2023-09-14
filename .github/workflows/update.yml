@@ -48,11 +48,6 @@ jobs:
           git config user.name 'Conda Bot'
           git config user.email '18747875+conda-bot@users.noreply.github.com'
 
-      - if: github.event_name == 'issue_comment'
-        name: configure git token
-        run: |
-          git config http.https://github.com/.extraHeader 'AUTHORIZATION: token ${{ secrets.SYNC_TOKEN }}'
-
       - name: combine recent durations from artifacts
         uses: conda/actions/combine-durations@combine-durations
 
@@ -65,29 +60,23 @@ jobs:
       - name: commit templated files
         run: git add . && git commit --message "Sync files" || true
 
-      # - if: github.event_name == 'issue_comment'
-      #   run: |
-      #     git config --local --list
-      #     echo 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
-      #     [[ "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" == "${{ secrets.SYNC_TOKEN }}" ]] && echo "SAME" || echo "DIFF"
-      #     git \
-      #       -c "http.https://github.com/.extraheader=" \
-      #       -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
-      #       push https://github.com/${{ env.REPOSITORY }}
+      - if: github.event_name == 'issue_comment'
+        run: |
+          git \
+            -c "http.https://github.com/.extraheader=" \
+            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
+            push https://github.com/${{ env.REPOSITORY }}
 
-      - name: create update PR
+      - if: github.event_name != 'issue_comment'
+        name: create update PR
         uses: peter-evans/create-pull-request@v5
         with:
-          push-to-fork: ${{ env.REPOSITORY }}
+          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
           token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
-          branch: ${{ env.REF }}
+          branch: update
           delete-branch: true
           title: 🤖 Update
           body: |
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
             This PR was created automatically by the [`update.yml`][update.yml] workflow.
-
-      - if: github.event_name != 'issue_comment'
-        run: |
-          git config --local --list
