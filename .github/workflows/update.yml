@@ -79,3 +79,8 @@ jobs:
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
             This PR was created automatically by the [`update.yml`][update.yml] workflow.
+
+      - if: github.event_name != 'issue_comment'
+        run: |
+          git config --local --list
+          git remote -vv
