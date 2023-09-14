@@ -46,7 +46,7 @@ jobs:
       - if: github.event_name == 'issue_comment'
         name: configure git token
         run: |
-          git config http.https://github.com/.extraHeader 'AUTHORIZATION: basic ${{ secrets.SYNC_TOKEN }}'
+          git config http.https://github.com/.extraHeader 'AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}'
 
       - name: combine recent durations from artifacts
         uses: conda/actions/combine-durations@combine-durations
@@ -63,7 +63,7 @@ jobs:
       - if: github.event_name == 'issue_comment'
         run: |
           git config --local --list
-          git push --force-with-lease -vv
+          git push --force-with-lease -vvv
 
       - if: github.event_name != 'issue_comment'
         name: create update PR
