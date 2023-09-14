@@ -46,7 +46,7 @@ jobs:
       - if: github.event_name == 'issue_comment'
         name: configure git token
         run: |
-          git config http.https://github.com/.extraHeader 'AUTHORIZATION: basic x-access-token:${{ secrets.SYNC_TOKEN }}'
+          git config http.https://github.com/.extraHeader 'AUTHORIZATION: basic ${{ secrets.SYNC_TOKEN }}'
 
       - name: combine recent durations from artifacts
         uses: conda/actions/combine-durations@combine-durations
