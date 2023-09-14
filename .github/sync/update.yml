@@ -1,0 +1,5 @@
+group:
+  - repos: |
+      conda-sandbox/test-synced
+    files:
+      - .github/workflows/update.yml

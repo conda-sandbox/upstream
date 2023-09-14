@@ -9,15 +9,26 @@ on:
   # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch
   workflow_dispatch:
 
+  issue_comment:
+    types:
+      - created
+
 jobs:
   update:
+    if: >-
+      !github.event.repository.fork
+      && (
+        github.event_name == 'schedule'
+        || github.event_name == 'workflow_dispatch'
+        || (
+          github.event.issue.pull_request
+          && github.event.comment.body == '@conda-bot render'
+        )
+      )
     runs-on: ubuntu-latest
-    permissions:
-      # necessary to open PR
-      # https://github.com/peter-evans/create-pull-request#action-inputs
-      contents: write
-      pull-requests: write
     steps:
+      - uses: crazy-max/ghaction-dump-context@v1
+
       - uses: actions/checkout@v3
 
       - name: configure git user
@@ -37,15 +48,25 @@ jobs:
       - name: commit templated files
         run: git add . && git commit --message "Sync files" || true
 
-      - name: create update PR
-        uses: peter-evans/create-pull-request@v5
-        with:
-          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
-          token: ${{ secrets.SYNC_TOKEN }}
-          branch: update
-          delete-branch: true
-          title: 🤖 Update
-          body: |
-            [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
+      # - name: create update PR
+      #   uses: peter-evans/create-pull-request@v5
+      #   with:
+      #     push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
+      #     token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
+      #     branch: update
+      #     delete-branch: true
+      #     title: 🤖 Update
+      #     body: |
+      #       [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
-            This PR was created automatically by the [`update.yml`][update.yml] workflow.
+      #       This PR was created automatically by the [`update.yml`][update.yml] workflow.
+
+  render:
+    if: >-
+      !github.event.repository.fork
+      && (
+        github.event.issue.pull_request
+        && github.event.comment.body == '@conda-bot render'
+      )
+    runs-on: ubuntu-latest
+    steps:

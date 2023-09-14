@@ -4,6 +4,13 @@ on:
   # NOTE: github.event is workflow_dispatch payload:
   # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch
   workflow_dispatch:
+    inputs:
+      config:
+        description: Select which sync configuration to use.
+        required: true
+        default: update
+        type: choice
+        options: [sync, update]
 
 jobs:
   sync:
@@ -15,7 +22,7 @@ jobs:
         with:
           GH_PAT: ${{ secrets.SYNC_TOKEN }}
           PR_LABELS: false
-          CONFIG_PATH: .github/sync/config.yml
+          CONFIG_PATH: .github/sync/${{ inputs.config || 'sync' }}.yml
           COMMIT_EACH_FILE: false
           GIT_USERNAME: Conda Bot
-          GIT_EMAIL: conda-bot@users.noreply.github.com
+          GIT_EMAIL: 18747875+conda-bot@users.noreply.github.com
