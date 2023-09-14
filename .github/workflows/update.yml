@@ -27,16 +27,10 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - uses: crazy-max/ghaction-dump-context@v1
-
-      - if: github.event.issue.pull_request && github.event.comment.body == '@conda-bot render'
+      - if: github.event_name == 'issue_comment'
         run: |
-          curl --silent ${{ github.event.issue.pull_request.url }}
-          curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name'
-          curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref'
           echo REPOSITORY=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
           echo REF=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
-          cat $GITHUB_ENV
 
       - uses: actions/checkout@v3
         with:
@@ -60,15 +54,19 @@ jobs:
       - name: commit templated files
         run: git add . && git commit --message "Sync files" || true
 
-      # - name: create update PR
-      #   uses: peter-evans/create-pull-request@v5
-      #   with:
-      #     push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
-      #     token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
-      #     branch: update
-      #     delete-branch: true
-      #     title: 🤖 Update
-      #     body: |
-      #       [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
+      - if: github.event_name == 'issue_comment'
+        run: git push
 
-      #       This PR was created automatically by the [`update.yml`][update.yml] workflow.
+      - if: github.event_name != 'issue_comment'
+        name: create update PR
+        uses: peter-evans/create-pull-request@v5
+        with:
+          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
+          token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
+          branch: update
+          delete-branch: true
+          title: 🤖 Update
+          body: |
+            [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
+
+            This PR was created automatically by the [`update.yml`][update.yml] workflow.
