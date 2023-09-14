@@ -31,8 +31,8 @@ jobs:
 
       - if: github.event.issue.pull_request && github.event.comment.body == '@conda-bot render'
         run: |
-          REPOSITORY=$(curl --quiet ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
-          REF=$(curl --quiet ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
+          REPOSITORY=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
+          REF=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
           cat $GITHUB_ENV
 
       - uses: actions/checkout@v3
