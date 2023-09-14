@@ -63,8 +63,7 @@ jobs:
       - if: github.event_name == 'issue_comment'
         run: |
           git config --local --list
-          git remote -vv
-          git push 
+          git push --force-with-lease
 
       - if: github.event_name != 'issue_comment'
         name: create update PR
@@ -83,4 +82,3 @@ jobs:
       - if: github.event_name != 'issue_comment'
         run: |
           git config --local --list
-          git remote -vv
