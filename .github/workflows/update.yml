@@ -68,6 +68,8 @@ jobs:
       - if: github.event_name == 'issue_comment'
         run: |
           git config --local --list
+          echo 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
+          [[ "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" == "${{ secrets.SYNC_TOKEN }}" ]] && echo "SAME" || echo "DIFF"
           git \
             -c "http.https://github.com/.extraheader=" \
             -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
