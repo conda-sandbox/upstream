@@ -65,23 +65,22 @@ jobs:
       - name: commit templated files
         run: git add . && git commit --message "Sync files" || true
 
-      - if: github.event_name == 'issue_comment'
-        run: |
-          git config --local --list
-          echo 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
-          [[ "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" == "${{ secrets.SYNC_TOKEN }}" ]] && echo "SAME" || echo "DIFF"
-          git \
-            -c "http.https://github.com/.extraheader=" \
-            -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
-            push https://github.com/${{ env.REPOSITORY }}
+      # - if: github.event_name == 'issue_comment'
+      #   run: |
+      #     git config --local --list
+      #     echo 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
+      #     [[ "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" == "${{ secrets.SYNC_TOKEN }}" ]] && echo "SAME" || echo "DIFF"
+      #     git \
+      #       -c "http.https://github.com/.extraheader=" \
+      #       -c "http.https://github.com/${{ env.REPOSITORY }}/.extraheader=AUTHORIZATION: bearer ${{ secrets.SYNC_TOKEN }}" \
+      #       push https://github.com/${{ env.REPOSITORY }}
 
-      - if: github.event_name != 'issue_comment'
-        name: create update PR
+      - name: create update PR
         uses: peter-evans/create-pull-request@v5
         with:
-          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
+          push-to-fork: ${{ env.REPOSITORY }}
           token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
-          branch: update
+          branch: ${{ env.REF }}
           delete-branch: true
           title: 🤖 Update
           body: |
