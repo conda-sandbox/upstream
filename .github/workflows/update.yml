@@ -85,3 +85,10 @@ jobs:
       - if: github.event.comment.body == '@conda-bot render'
         name: push changes
         run: git push --force-with-lease
+
+      - if: github.event_name == 'issue_comment'
+        uses: peter-evans/create-or-update-comment@v3.0.2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: ${{ success() && '+1' || '-1' }}
+          token: ${{ secrets.SYNC_TOKEN }}
