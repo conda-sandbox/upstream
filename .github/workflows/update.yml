@@ -13,11 +13,6 @@ on:
     types:
       - created
 
-env:
-  GIT_TRACE: 1
-  GIT_TRANSFER_TRACE: 1
-  GIT_CURL_VERBOSE: 1
-
 jobs:
   update:
     if: >-
@@ -32,7 +27,9 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - if: github.event_name == 'issue_comment'
+      - uses: crazy-max/ghaction-dump-context@v1
+
+      - if: github.event_name == 'issue_comment' && github.event.comment.body == '@conda-bot render'
         name: configure git origin
         run: |
           echo REPOSITORY=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
@@ -61,20 +58,35 @@ jobs:
       - name: commit templated files
         run: git add . && git commit --message "Sync files" || true
 
-      - if: github.event_name == 'issue_comment'
-        run: git push --force-with-lease
-        # git push --force-with-lease https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ env.REPOSITORY }}.git
-
-      - if: github.event_name != 'issue_comment'
+      - if: github.event_name != 'issue_comment' || github.event.comment.body == '@conda-bot recreate'
         name: create update PR
         uses: peter-evans/create-pull-request@v5
         with:
           push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
-          token: ${{ secrets.SYNC_TOKEN }}  # repo scoped PAT
+          token: ${{ secrets.SYNC_TOKEN }}
           branch: update
           delete-branch: true
           title: 🤖 Update
           body: |
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
-            This PR was created automatically by the [`update.yml`][update.yml] workflow.
+            This is your friendly update PR
+
+            Created automatically by the [`update.yml`][update.yml] workflow, see ${{  }}.
+
+            <details>
+            <summary>Commands</summary>
+
+            Trigger actions by commenting on this PR:
+
+            - `@conda-bot render` will run rendering workflows and commit and push any changes to this PR
+            - `@conda-bot recreate` will recreate this PR, overwriting any edits that have been made to it
+
+            </details>
+
+      - if: github.event_name == 'issue_comment' && github.event.comment.body == '@conda-bot render'
+        id: git-push
+        run: git push --force-with-lease
+
+      - if: failed(step.git-push)
+        uses: sticky comment
