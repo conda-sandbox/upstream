@@ -4,8 +4,7 @@ on:
   # every Sunday at 00:00 UTC
   # https://crontab.guru/#0_0_*_*_0
   schedule:
-    # - cron: '0 0 * * 0'
-    - cron: '10 * * * *'
+    - cron: '0 0 * * 0'
 
   workflow_dispatch:
 
