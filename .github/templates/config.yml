@@ -7,9 +7,6 @@ conda/infrastructure:
   - .github/workflows/stale.yml
   - .github/workflows/lock.yml
   - .github/workflows/cla.yml
-  - .github/ISSUE_TEMPLATE/0_bug.yml
-  - .github/ISSUE_TEMPLATE/1_feature.yml
-  - .github/ISSUE_TEMPLATE/epic.yml
   - HOW_WE_USE_GITHUB.md
   # release files
   - src: .github/PULL_REQUEST_TEMPLATE/with_releases.md
@@ -18,7 +15,18 @@ conda/infrastructure:
     dst: news/TEMPLATE
 conda-sandbox/infrastructure:
   - .github/workflows/update.yml
+  
   - src: .github/templates/rever.xsh
     dst: rever.xsh
+  
   - src: .github/templates/RELEASE.md
     dst: RELEASE.md
+  
+  - src: .github/templates/0_bug.yml
+    dst: .github/ISSUE_TEMPLATE/0_bug.yml
+  
+  - src: .github/templates/1_feature.yml
+    dst: .github/ISSUE_TEMPLATE/1_feature.yml
+  
+  - src: .github/templates/epic.yml
+    dst: .github/ISSUE_TEMPLATE/epic.yml
