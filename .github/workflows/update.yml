@@ -69,7 +69,7 @@ jobs:
           body: |
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
-            This is your friendly repository update PR iniated by ${{ github.event_name }} (triggered by @${{ github.triggering_actor }}).
+            This is your friendly repository update PR triggered by @${{ github.triggering_actor }} via ${{ github.event_name }}.
 
             <details>
             <summary>Commands</summary>
