@@ -27,7 +27,8 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ github.event.comment.id }}
-          reactions: rocket
+          reactions: eyes
+          reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
 
       - if: github.event.comment.body == '@conda-bot render'
@@ -86,11 +87,12 @@ jobs:
       - if: github.event.comment.body == '@conda-bot render'
         id: update
         name: push changes
-        run: git pushs --force-with-lease
+        run: git push --force-with-lease
 
       - if: always() && github.event_name == 'issue_comment'
         uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ github.event.comment.id }}
-          reactions: ${{ (steps.create.conclusion == 'success' || steps.update.conclusion == 'success') && '+1' || '-1' }}
+          reactions: ${{ (steps.create.conclusion == 'success' || steps.update.conclusion == 'success') && 'hooray' || 'confused' }}
+          reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
