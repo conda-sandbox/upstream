@@ -4,9 +4,9 @@ on:
   # every Sunday at 00:00 UTC
   # https://crontab.guru/#0_0_*_*_0
   schedule:
-    - cron: '10 * * * *'
+    # - cron: '0 0 * * 0'
+    - cron: '5 * * * *'
 
-  # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch
   workflow_dispatch:
 
   issue_comment:
@@ -24,6 +24,13 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - if: github.event_name == 'issue_comment'
+        uses: peter-evans/create-or-update-comment@v3.0.2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: rocket
+          token: ${{ secrets.REACTION_TOKEN }}
+
       - if: github.event.comment.body == '@conda-bot render'
         name: configure git origin
         run: |
@@ -62,7 +69,7 @@ jobs:
           body: |
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
-            This is your friendly repository update PR iniated by ${{ github.event_name }} (@${{ github.triggering_actor }}).
+            This is your friendly repository update PR iniated by ${{ github.event_name }} (triggered by @${{ github.triggering_actor }}).
 
             <details>
             <summary>Commands</summary>
