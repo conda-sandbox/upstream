@@ -61,7 +61,7 @@ jobs:
         id: create
         uses: peter-evans/create-pull-request@v5
         with:
-          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}4
+          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
           token: ${{ secrets.SYNC_TOKEN }}
           branch: update
           delete-branch: true
@@ -86,7 +86,7 @@ jobs:
       - if: github.event.comment.body == '@conda-bot render'
         id: update
         name: push changes
-        run: git push --force-with-lease
+        run: git pushs --force-with-lease
 
       - if: always() && github.event_name == 'issue_comment'
         uses: peter-evans/create-or-update-comment@v3.0.2
