@@ -1,6 +1,0 @@
-group:
-  - repos: |
-      conda-sandbox/test-synced
-    files:
-      - source: .github/sync/OLD_STYLE_PUSH.md
-        dest: OLD_STYLE_PUSH.md

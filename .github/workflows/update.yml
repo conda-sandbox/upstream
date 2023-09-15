@@ -55,13 +55,10 @@ jobs:
 
       - uses: conda/actions/combine-durations@combine-durations
 
-      - name: commit updated durations
-        run: git add . && git commit --message "Update test durations" || true
-
       - uses: conda/actions/template-files@template-files
 
-      - name: commit templated files
-        run: git add . && git commit --message "Sync files" || true
+      - name: commit changes
+        run: git add . && git commit --message "🤖 updated file(s)" || true
 
       - if: github.event.comment.body != '@conda-bot render'
         id: create

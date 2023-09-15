@@ -10,7 +10,7 @@ on:
         required: true
         default: update
         type: choice
-        options: [sync, update]
+        options: [sync, push]
 
 jobs:
   sync:
@@ -26,3 +26,6 @@ jobs:
           COMMIT_EACH_FILE: false
           GIT_USERNAME: Conda Bot
           GIT_EMAIL: 18747875+conda-bot@users.noreply.github.com
+          FORK: kenodegard-bot
+          BRANCH_PREFIX: update
+          COMMIT_PREFIX: 🤖
