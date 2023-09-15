@@ -32,7 +32,7 @@ body:
       description: What should have happened instead? Please provide as many details as possible. The more information provided, the more likely we are able to replicate your problem and offer a solution.
     validations:
       required: true
-  [% include 'issue_template_details.yml' ignore missing %]
+[% include 'issue_template_details.yml' ignore missing %]
   - type: textarea
     id: context
     attributes:
