@@ -17,9 +17,12 @@ jobs:
     if: >-
       !github.event.repository.fork
       && (
-        !github.event.issue.pull_request
-        || github.event.comment.body == '@conda-bot render'
-        || github.event.comment.body == '@conda-bot recreate'
+        github.event_name != 'issue_comment'
+        || (
+          github.event.issue.pull_request
+          || github.event.comment.body == '@conda-bot render'
+          || github.event.comment.body == '@conda-bot recreate'
+        )
       )
     runs-on: ubuntu-latest
     steps:
