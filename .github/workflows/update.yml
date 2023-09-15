@@ -72,7 +72,7 @@ jobs:
 
             This is your friendly update PR
 
-            Created automatically by the [`update.yml`][update.yml] workflow, see ${{  }}.
+            Created automatically by the [`update.yml`][update.yml] workflow, see .
 
             <details>
             <summary>Commands</summary>
