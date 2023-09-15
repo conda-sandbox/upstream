@@ -85,8 +85,4 @@ jobs:
             </details>
 
       - if: github.event_name == 'issue_comment' && github.event.comment.body == '@conda-bot render'
-        id: git-push
         run: git push --force-with-lease
-
-      - if: failed(step.git-push)
-        uses: sticky comment
