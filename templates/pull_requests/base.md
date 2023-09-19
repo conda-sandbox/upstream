@@ -18,5 +18,5 @@
      let us know!
 
      Helpful links:
-       - Conda Org COC: [[ repo.url ]]/blob/main/CODE_OF_CONDUCT.md
-       - Contributing docs: [[ repo.url ]]/blob/main/CONTRIBUTING.md -->
+       - Conda Org COC: [[ repo.html_url ]]/blob/main/CODE_OF_CONDUCT.md
+       - Contributing docs: [[ repo.html_url ]]/blob/main/CONTRIBUTING.md -->
