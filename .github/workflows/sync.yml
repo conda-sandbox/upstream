@@ -8,9 +8,9 @@ on:
       config:
         description: Select which sync configuration to use.
         required: true
-        default: update
+        default: push
         type: choice
-        options: [sync, push]
+        options: [push, config]
 
 jobs:
   sync:
@@ -22,7 +22,7 @@ jobs:
         with:
           GH_PAT: ${{ secrets.SYNC_TOKEN }}
           PR_LABELS: false
-          CONFIG_PATH: .github/sync/${{ inputs.config || 'sync' }}.yml
+          CONFIG_PATH: .github/sync/${{ inputs.config || 'config' }}.yml
           COMMIT_EACH_FILE: false
           GIT_USERNAME: Conda Bot
           GIT_EMAIL: 18747875+conda-bot@users.noreply.github.com
