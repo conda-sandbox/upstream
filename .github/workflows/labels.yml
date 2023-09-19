@@ -19,6 +19,9 @@ jobs:
     env:
       GLOBAL: https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
       LOCAL: .github/labels.yml
+    permissions:
+      # https://github.com/EndBug/label-sync/issues/187#issuecomment-1442103739
+      issues: write
     steps:
       - uses: actions/checkout@v4
       - id: has_local
