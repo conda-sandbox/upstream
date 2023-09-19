@@ -1,4 +1,7 @@
 conda-sandbox/infrastructure:
+  - .github/workflwos/update.yml
+  - .github/workflwos/labels.yml
+
   - CODE_OF_CONDUCT.md
 
   - src: templates/HOW_WE_USE_GITHUB.md
