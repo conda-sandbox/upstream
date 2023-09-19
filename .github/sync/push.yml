@@ -3,3 +3,6 @@ group:
       conda-sandbox/test-synced
     files:
       - .github/workflows/update.yml
+      - source: templates/config.yml
+        destination: .github/templates/config.yml
+        replace: false
