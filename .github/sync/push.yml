@@ -4,5 +4,5 @@ group:
     files:
       - .github/workflows/update.yml
       - source: templates/config.yml
-        destination: .github/templates/config.yml
+        dest: .github/templates/config.yml
         replace: false
