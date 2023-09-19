@@ -15,18 +15,18 @@
 
 [infrastructure]: https://github.com/conda/infrastructure
 [workflow-sync]: https://github.com/conda/infrastructure/blob/main/.github/workflows/sync.yml
-[workflow-update]: https://github.com/conda/infrastructure/blob/main/.github/workflows/update.yml
+[workflow-update]: [[ repo.html_url ]]/blob/main/.github/workflows/update.yml
 [labels-global]: https://github.com/conda/infrastructure/blob/main/.github/global.yml
 
 <!-- relative URLs -->
-[workflow-cla]: /.github/workflows/cla.yml
-[workflow-issues]: /.github/workflows/issues.yml
-[workflow-labels]: /.github/workflows/labels.yml
-[workflow-lock]: /.github/workflows/lock.yml
-[workflow-project]: /.github/workflows/project.yml
-[workflow-stale]: /.github/workflows/stale.yml
-[labels-local]: /.github/labels.yml
-[labels-page]: ../../labels
+[workflow-cla]: [[ repo.html_url ]]/blob/main/.github/workflows/cla.yml
+[workflow-issues]: [[ repo.html_url ]]/blob/main/.github/workflows/issues.yml
+[workflow-labels]: [[ repo.html_url ]]/blob/main/.github/workflows/labels.yml
+[workflow-lock]: [[ repo.html_url ]]/blob/main/.github/workflows/lock.yml
+[workflow-project]: [[ repo.html_url ]]/blob/main/.github/workflows/project.yml
+[workflow-stale]: [[ repo.html_url ]]/blob/main/.github/workflows/stale.yml
+[labels-local]: [[ repo.html_url ]]/blob/main/.github/labels.yml
+[labels-page]: [[ repo.html_url ]]/labels
 
 # How We Use GitHub
 
