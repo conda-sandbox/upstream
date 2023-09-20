@@ -138,7 +138,8 @@ jobs:
       )
     runs-on: ubuntu-latest
     env:
-      LOCAL: .github/labels.yml
+      GLOBAL: https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
+      LOCAL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository.default_branch }}/.github/labels.yml
     permissions:
       # https://github.com/EndBug/label-sync/issues/187#issuecomment-1442103739
       issues: write
@@ -152,15 +153,24 @@ jobs:
           token: ${{ secrets.SYNC_TOKEN }}
 
       - name: check if labels.yml exists
-        run: curl --silent --fail --output /dev/null $URL && echo LOCAL=$URL >> $GITHUB_ENV || true
-        env:
-          URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository.default_branch }}/.github/labels.yml
+        run: curl --silent --fail --output /dev/null $LOCAL && echo EXISTS=true >> $GITHUB_ENV || true
 
-      - uses: EndBug/label-sync@v2.3.2
-        id: sync
+      - name: Global Only
+        if: !env.EXISTS
+        uses: EndBug/label-sync@v2.3.2
+        id: global
+        with:
+          config-file: ${{ env.GLOBAL }}
+          delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
+          dry-run: ${{ inputs.dry-run-labels || 'false' }}
+
+      - name: Global & Local
+        if: env.EXISTS
+        uses: EndBug/label-sync@v2.3.2
+        id: local
         with:
           config-file: |
-            https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
+            ${{ env.GLOBAL }}
             ${{ env.LOCAL }}
           delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
           dry-run: ${{ inputs.dry-run-labels || 'false' }}
@@ -169,6 +179,6 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ github.event.comment.id }}
-          reactions: ${{ steps.sync.conclusion == 'success' && 'hooray' || 'confused' }}
+          reactions: ${{ (steps.global.conclusion == 'success' || steps.local.conclusion == 'success') && 'hooray' || 'confused' }}
           reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
