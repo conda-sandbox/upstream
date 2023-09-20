@@ -1,6 +1,5 @@
 conda-sandbox/infrastructure:
   - .github/workflows/update.yml
-  - .github/workflows/labels.yml
 
   - CODE_OF_CONDUCT.md
 

@@ -7,6 +7,12 @@ on:
     - cron: '0 2 * * 0'
 
   workflow_dispatch:
+    inputs:
+      delete-unmapped-labels:
+        description: Delete labels not mapped in either global or local label configurations.
+        required: true
+        default: false
+        type: boolean
 
   issue_comment:
     types:
@@ -81,6 +87,7 @@ jobs:
 
             - `@conda-bot render` will run rendering workflows and commit and push any changes to this PR
             - `@conda-bot recreate` will recreate this PR, overwriting any edits that have been made to it
+            - `@conda-bot labels` will synchronize labels
 
             </details>
 
@@ -96,5 +103,58 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: ${{ (steps.create.conclusion == 'success' || steps.update.conclusion == 'success') && 'hooray' || 'confused' }}
+          reactions-edit-mode: replace
+          token: ${{ secrets.SYNC_TOKEN }}
+
+  labels:
+    if: >-
+      !github.event.repository.fork
+      && (
+        github.event_name != 'issue_comment'
+        || (
+          github.event.issue.pull_request
+          && (
+            github.event.comment.body == '@conda-bot labels'
+            || github.event.comment.body == '@conda-bot recreate'
+          )
+        )
+      )
+    runs-on: ubuntu-latest
+    env:
+      LOCAL: .github/labels.yml
+    permissions:
+      # https://github.com/EndBug/label-sync/issues/187#issuecomment-1442103739
+      issues: write
+    steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v2.1.0
+
+      - if: github.event_name == 'issue_comment'
+        uses: peter-evans/create-or-update-comment@v3.0.2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: eyes
+          reactions-edit-mode: replace
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: check if labels.yml exists
+        run: curl --silent --fail --output /dev/null $URL && echo LOCAL=$URL >> $GITHUB_ENV
+        env:
+          URL: ${{ github.api_url }}/${{ github.repository }}/.github/labels.yml
+
+      - uses: EndBug/label-sync@v2.3.2
+        id: sync
+        with:
+          config-file: |
+            https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
+            ${{ env.LOCAL }}
+          delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
+          dry-run: false
+
+      - if: always() && github.event_name == 'issue_comment'
+        uses: peter-evans/create-or-update-comment@v3.0.2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: ${{ steps.sync.conclusion == 'success' && 'hooray' || 'confused' }}
           reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
