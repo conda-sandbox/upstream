@@ -140,7 +140,7 @@ jobs:
       - name: check if labels.yml exists
         run: curl --silent --fail --output /dev/null $URL && echo LOCAL=$URL >> $GITHUB_ENV
         env:
-          URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository/default_branch }}/.github/labels.yml
+          URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository.default_branch }}/.github/labels.yml
 
       - uses: EndBug/label-sync@v2.3.2
         id: sync
