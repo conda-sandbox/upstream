@@ -8,11 +8,21 @@ on:
 
   workflow_dispatch:
     inputs:
+      only-labels:
+        description: Only run label synchronization.
+        default: true
+        type: boolean
+
       delete-unmapped-labels:
         description: Delete labels not mapped in either global or local label configurations.
-        required: true
         default: false
         type: boolean
+      
+      dry-run-labels:
+        description: Run label synchronization workflow without making any changes.
+        default: false
+        type: boolean
+
 
   issue_comment:
     types:
@@ -23,9 +33,14 @@ jobs:
     if: >-
       !github.event.repository.fork
       && (
-        github.event_name != 'issue_comment'
+        github.event_name == 'schedule'
         || (
-          github.event.issue.pull_request
+          github.event_name == 'workflow_dispatch'
+          && !inputs.only-labels
+        )
+        || (
+          github.event_name == 'issue_comment'
+          && github.event.issue.pull_request
           && (
             github.event.comment.body == '@conda-bot render'
             || github.event.comment.body == '@conda-bot recreate'
@@ -110,9 +125,11 @@ jobs:
     if: >-
       !github.event.repository.fork
       && (
-        github.event_name != 'issue_comment'
+        github.event_name == 'schedule'
+        || github.event_name == 'workflow_dispatch'
         || (
-          github.event.issue.pull_request
+          github.event_name == 'issue_comment'
+          && github.event.issue.pull_request
           && (
             github.event.comment.body == '@conda-bot labels'
             || github.event.comment.body == '@conda-bot recreate'
@@ -126,9 +143,6 @@ jobs:
       # https://github.com/EndBug/label-sync/issues/187#issuecomment-1442103739
       issues: write
     steps:
-      - name: Dump context
-        uses: crazy-max/ghaction-dump-context@v2.1.0
-
       - if: github.event_name == 'issue_comment'
         uses: peter-evans/create-or-update-comment@v3.0.2
         with:
@@ -138,7 +152,7 @@ jobs:
           token: ${{ secrets.SYNC_TOKEN }}
 
       - name: check if labels.yml exists
-        run: curl --silent --fail --output /dev/null $URL && echo LOCAL=$URL >> $GITHUB_ENV
+        run: curl --silent --fail --output /dev/null $URL && echo LOCAL=$URL >> $GITHUB_ENV || true
         env:
           URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository.default_branch }}/.github/labels.yml
 
@@ -149,7 +163,7 @@ jobs:
             https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
             ${{ env.LOCAL }}
           delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
-          dry-run: false
+          dry-run: ${{ inputs.dry-run-labels || 'false' }}
 
       - if: always() && github.event_name == 'issue_comment'
         uses: peter-evans/create-or-update-comment@v3.0.2
