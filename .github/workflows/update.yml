@@ -139,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GLOBAL: https://raw.githubusercontent.com/conda/infrastructure/main/.github/global.yml
-      LOCAL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.repository.default_branch }}/.github/labels.yml
+      LOCAL: .github/labels.yml
     permissions:
       # https://github.com/EndBug/label-sync/issues/187#issuecomment-1442103739
       issues: write
@@ -152,22 +152,26 @@ jobs:
           reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
 
-      - name: check if labels.yml exists
-        run: curl --silent --fail --output /dev/null $LOCAL && echo EXISTS=true >> $GITHUB_ENV || true
-
+      - uses: actions/checkout@v4
+      
+      - id: has_local
+        uses: andstor/file-existence-action@v2.0.0
+        with:
+          files: ${{ env.LOCAL }}
+      
       - name: Global Only
-        if: !env.EXISTS
-        uses: EndBug/label-sync@v2.3.2
+        if: steps.has_local.outputs.files_exists == 'false'
         id: global
+        uses: EndBug/label-sync@v2.3.2
         with:
           config-file: ${{ env.GLOBAL }}
           delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
           dry-run: ${{ inputs.dry-run-labels || 'false' }}
 
       - name: Global & Local
-        if: env.EXISTS
-        uses: EndBug/label-sync@v2.3.2
+        if: steps.has_local.outputs.files_exists == 'true'
         id: local
+        uses: EndBug/label-sync@v2.3.2
         with:
           config-file: |
             ${{ env.GLOBAL }}
