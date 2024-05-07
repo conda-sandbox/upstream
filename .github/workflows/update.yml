@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - if: github.event_name == 'issue_comment'
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
@@ -63,7 +63,7 @@ jobs:
           echo REPOSITORY=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.repo.full_name') >> $GITHUB_ENV
           echo REF=$(curl --silent ${{ github.event.issue.pull_request.url }} | jq --raw-output '.head.ref') >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
         with:
           repository: ${{ env.REPOSITORY || github.repository }}
           ref: ${{ env.REF || '' }}
@@ -83,7 +83,7 @@ jobs:
 
       - if: github.event.comment.body != '@conda-bot render'
         id: create
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@6d6857d36972b65feb161a90e484f2984215f83e # v6.0.5
         with:
           push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
           token: ${{ secrets.SYNC_TOKEN }}
@@ -114,7 +114,7 @@ jobs:
         run: git push --force-with-lease
 
       - if: always() && github.event_name == 'issue_comment'
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: ${{ (steps.create.conclusion == 'success' || steps.update.conclusion == 'success') && 'hooray' || 'confused' }}
@@ -142,24 +142,24 @@ jobs:
       issues: write
     steps:
       - if: github.event_name == 'issue_comment'
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
           reactions-edit-mode: replace
           token: ${{ secrets.SYNC_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       
       - id: has_local
-        uses: andstor/file-existence-action@v2.0.0
+        uses: andstor/file-existence-action@20b4d2e596410855db8f9ca21e96fbe18e12930b # v2.0.0
         with:
           files: ${{ env.LOCAL }}
       
       - name: Global Only
         if: steps.has_local.outputs.files_exists == 'false'
         id: global
-        uses: EndBug/label-sync@v2.3.2
+        uses: EndBug/label-sync@da00f2c11fdb78e4fae44adac2fdd713778ea3e8 # v2.3.2
         with:
           config-file: ${{ env.GLOBAL }}
           delete-other-labels: ${{ inputs.delete-unmapped-labels || 'false' }}
@@ -168,7 +168,7 @@ jobs:
       - name: Global & Local
         if: steps.has_local.outputs.files_exists == 'true'
         id: local
-        uses: EndBug/label-sync@v2.3.2
+        uses: EndBug/label-sync@da00f2c11fdb78e4fae44adac2fdd713778ea3e8 # v2.3.2
         with:
           config-file: |
             ${{ env.GLOBAL }}
@@ -177,7 +177,7 @@ jobs:
           dry-run: ${{ inputs.dry-run-labels || 'false' }}
 
       - if: always() && github.event_name == 'issue_comment'
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: ${{ (steps.global.conclusion == 'success' || steps.local.conclusion == 'success') && 'hooray' || 'confused' }}
