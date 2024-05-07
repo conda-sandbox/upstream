@@ -74,7 +74,7 @@ jobs:
           git config user.name 'Conda Bot'
           git config user.email '18747875+conda-bot@users.noreply.github.com'
 
-      - uses: conda/actions/combine-durations@combine-durations
+      - uses: conda/actions/combine-durations@main
 
       - uses: conda/actions/template-files@template-files
 
