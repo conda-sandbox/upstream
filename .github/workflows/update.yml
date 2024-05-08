@@ -74,9 +74,9 @@ jobs:
           git config user.name 'Conda Bot'
           git config user.email '18747875+conda-bot@users.noreply.github.com'
 
-      - uses: conda/actions/combine-durations@main
+      - uses: conda/actions/combine-durations@976289d0cfd85139701b26ddd133abdd025a7b5f # v24.5.0
 
-      - uses: conda/actions/template-files@template-files
+      - uses: conda/actions/template-files@976289d0cfd85139701b26ddd133abdd025a7b5f # v24.5.0
 
       - name: commit changes
         run: git add . && git commit --message "🤖 updated file(s)" || true
