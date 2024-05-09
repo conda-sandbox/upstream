@@ -82,7 +82,8 @@ jobs:
         run: git add . && git commit --message "🤖 updated file(s)" || true
 
       - if: github.even.commont.body != '@conda-bot render'
-        run: gh repo fork --clone=false
+        name: create fork
+        run: echo FORK=$(gh repo fork --clone=false --default-branch-only | awk '{print $1}') >> $GITHUB_ENV
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
@@ -91,7 +92,7 @@ jobs:
         id: create
         uses: peter-evans/create-pull-request@6d6857d36972b65feb161a90e484f2984215f83e # v6.0.5
         with:
-          push-to-fork: kenodegard-bot/${{ github.event.repository.name }}
+          push-to-fork: ${{ env.FORK }}
           token: ${{ secrets.SYNC_TOKEN }}
           branch: update
           delete-branch: true
