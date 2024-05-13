@@ -1,4 +1,4 @@
-conda/infrastructure:
+conda-sandbox/upstream:
   # [required] general files and workflows
   - CODE_OF_CONDUCT.md
   - .github/workflows/cla.yml
