@@ -22,7 +22,7 @@ jobs:
         with:
           GH_PAT: ${{ secrets.SYNC_TOKEN }}
           PR_LABELS: false
-          CONFIG_PATH: .github/sync/${{ inputs.config || 'config' }}.yml
+          CONFIG_PATH: sync/${{ inputs.config || 'config' }}.yml
           COMMIT_EACH_FILE: false
           GIT_USERNAME: Conda Bot
           GIT_EMAIL: 18747875+conda-bot@users.noreply.github.com

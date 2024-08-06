@@ -38,7 +38,7 @@ jobs:
       - name: (upstream) Remove repository from sync.yml
         # no-op if the repository is not in the sync.yml file
         continue-on-error: true
-        run: sed -i '\%${{ github.event.inputs.org }}/${{ github.event.inputs.repo }}$%d' upstream/.github/sync/config.yml
+        run: sed -i '\%${{ github.event.inputs.org }}/${{ github.event.inputs.repo }}$%d' upstream/sync/config.yml
 
       - name: (upstream) Commit changes
         # no-op if there are no updates
@@ -65,7 +65,7 @@ jobs:
           token: ${{ secrets.SYNC_TOKEN }}
           branch: init-${{ github.event.inputs.org }}-${{ github.event.inputs.repo }}
           delete-branch: true
-          title: 🤖 Init ${{ github.event.inputs.org }}/${{ github.event.inputs.repo }}
+          title: 🤖 Remove ${{ github.event.inputs.org }}/${{ github.event.inputs.repo }} from `sync.yml`
           body: |
             [init.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/init.yml
 
@@ -114,7 +114,7 @@ jobs:
           token: ${{ secrets.SYNC_TOKEN }}
           branch: init
           delete-branch: true
-          title: 🤖 Init
+          title: 🤖 Init `update.yml` workflow
           body: |
             [init.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/init.yml
 
