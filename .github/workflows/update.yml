@@ -48,6 +48,7 @@ jobs:
         with:
           repository: ${{ env.REPOSITORY || github.repository }}
           ref: ${{ env.REF || '' }}
+          token: ${{ secrets.SYNC_TOKEN }}
 
       - name: Configure git user
         run: |
@@ -68,7 +69,7 @@ jobs:
       - if: github.event.comment.body != '@conda-bot render'
         name: Create fork
         # no-op if the repository is already forked
-        run: echo FORK=$(gh repo fork --clone=false --default-branch-only | awk '{print $1}') >> $GITHUB_ENV
+        run: echo FORK=$(gh repo fork --clone=false --default-branch-only 2>&1 | awk '{print $1}') >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
 
@@ -81,7 +82,7 @@ jobs:
           token: ${{ secrets.SYNC_TOKEN }}
           branch: update
           delete-branch: true
-          title: 🤖 Update
+          title: 🤖 Update infrastructure file(s)
           body: |
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
