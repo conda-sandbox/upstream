@@ -2,6 +2,9 @@ conda/governance:
   # [required] community files
   - CODE_OF_CONDUCT.md
 
+conda/unknown:
+  - CONTRIBUTING.md
+
 conda/infrastructure:
   # [required] general workflows
   - .github/workflows/cla.yml
