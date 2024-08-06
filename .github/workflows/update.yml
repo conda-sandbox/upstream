@@ -58,6 +58,7 @@ jobs:
       - uses: conda/actions/combine-durations@976289d0cfd85139701b26ddd133abdd025a7b5f # v24.5.0
 
       - uses: conda/actions/template-files@template-summary
+        id: template
         continue-on-error: true
 
       - name: Commit changes
@@ -88,6 +89,8 @@ jobs:
             [update.yml]: ${{ github.server_url }}/${{ github.repository }}/blob/main/.github/workflows/update.yml
 
             Your friendly repository updater.
+
+            ${{ steps.template.outputs.summary }}
 
             This PR was triggered by @${{ github.triggering_actor }} via ${{ github.event_name }}.
 
