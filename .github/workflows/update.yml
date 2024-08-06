@@ -57,7 +57,7 @@ jobs:
 
       - uses: conda/actions/combine-durations@976289d0cfd85139701b26ddd133abdd025a7b5f # v24.5.0
 
-      - uses: conda/actions/template-files@976289d0cfd85139701b26ddd133abdd025a7b5f # v24.5.0
+      - uses: conda/actions/template-files@template-summary
 
       - name: Commit changes
         # no-op if there are no updates
