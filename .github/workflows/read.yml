@@ -28,7 +28,7 @@ jobs:
         continue-on-error: true
 
       - name: Print Yaml key
-        run: echo ${{ steps.read_yaml.outputs.content['stale-issue'] }}
+        run: echo ${{ fromJSON(steps.read_yaml.outputs.content)['stale-issue'] }}
         continue-on-error: true
 
       - name: Print JSON
@@ -36,7 +36,7 @@ jobs:
         continue-on-error: true
 
       - name: Print JSON key
-        run: echo ${{ steps.read_json.outputs.content['contributors'] }}
+        run: echo ${{ fromJSON(steps.read_json.outputs.content)['contributors'] }}
         continue-on-error: true
 
       - name: Print File
