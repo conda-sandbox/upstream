@@ -1,0 +1,40 @@
+name: Read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  stale:
+    if: '!github.event.repository.fork'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: conda/actions/read-file@read-file
+        id: read_yaml
+        with:
+          path: https://raw.githubusercontent.com/conda/infra/main/.github/messages.yml
+
+      - uses: conda/actions/read-file@read-file
+        id: read_json
+        with:
+          path: https://raw.githubusercontent.com/conda/infra/main/.clabot
+
+      - uses: conda/actions/read-file@read-file
+        id: read_file
+        with:
+          path: https://raw.githubusercontent.com/conda/infra/main/README.md
+
+      - name: Print Yaml
+        run: echo ${{ steps.read_yaml.outputs.content }}
+
+      - name: Print Yaml key
+        run: echo ${{ steps.read_yaml.outputs.content["stale-issue"] }}
+
+      - name: Print JSON
+        run: echo ${{ steps.read_json.outputs.content }}
+
+      - name: Print JSON key
+        run: echo ${{ steps.read_json.outputs.content["contributors"] }}
+
+      - name: Print File
+        run: echo ${{ steps.read_file.outputs.content }}
+
