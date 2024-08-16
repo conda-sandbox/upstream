@@ -25,16 +25,21 @@ jobs:
 
       - name: Print Yaml
         run: echo ${{ steps.read_yaml.outputs.content }}
+        continue-on-error: true
 
       - name: Print Yaml key
         run: echo ${{ steps.read_yaml.outputs.content['stale-issue'] }}
+        continue-on-error: true
 
       - name: Print JSON
         run: echo ${{ steps.read_json.outputs.content }}
+        continue-on-error: true
 
       - name: Print JSON key
         run: echo ${{ steps.read_json.outputs.content['contributors'] }}
+        continue-on-error: true
 
       - name: Print File
         run: echo ${{ steps.read_file.outputs.content }}
+        continue-on-error: true
 
