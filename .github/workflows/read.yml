@@ -12,11 +12,13 @@ jobs:
         id: read_yaml
         with:
           path: https://raw.githubusercontent.com/conda/infra/main/.github/messages.yml
+          parser: yaml
 
       - uses: conda/actions/read-file@read-file
         id: read_json
         with:
           path: https://raw.githubusercontent.com/conda/infra/main/.clabot
+          parser: json
 
       - uses: conda/actions/read-file@read-file
         id: read_file
@@ -24,22 +26,22 @@ jobs:
           path: https://raw.githubusercontent.com/conda/infra/main/README.md
 
       - name: Print Yaml
-        run: echo ${{ steps.read_yaml.outputs.content }}
+        run: echo "${{ steps.read_yaml.outputs.content }}"
         continue-on-error: true
 
       - name: Print Yaml key
-        run: echo ${{ fromJSON(steps.read_yaml.outputs.content)['stale-issue'] }}
+        run: echo "${{ fromJSON(steps.read_yaml.outputs.content)['stale-issue'] }}"
         continue-on-error: true
 
       - name: Print JSON
-        run: echo ${{ steps.read_json.outputs.content }}
+        run: echo "${{ steps.read_json.outputs.content }}"
         continue-on-error: true
 
       - name: Print JSON key
-        run: echo ${{ fromJSON(steps.read_json.outputs.content)['contributors'] }}
+        run: echo "${{ fromJSON(steps.read_json.outputs.content)['contributors'] }}"
         continue-on-error: true
 
       - name: Print File
-        run: echo ${{ steps.read_file.outputs.content }}
+        run: echo "${{ steps.read_file.outputs.content }}"
         continue-on-error: true
 
