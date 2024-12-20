@@ -6,16 +6,13 @@ on:
       - created
   pull_request_target:
 
-env:
-  MAGIC_COMMAND: '@kenodegard-bot check'
-
 jobs:
   check:
     if: >-
       !github.event.repository.fork
       && (
         github.event.issue.pull_request
-        && github.event.comment.body == env.MAGIC_WORD
+        && github.event.comment.body == '@kenodegard-bot check'
         || github.event_name == 'pull_request_target'
       )
     runs-on: ubuntu-latest
@@ -24,7 +21,7 @@ jobs:
         uses: conda/actions/check-cla@check-cla
         with:
           repository: conda-sandbox/cla
-          magic-command: ${{ env.MAGIC_COMMAND }}
+          magic-command: '@kenodegard-bot check'
           author: Bot <105068560+kenodegard-bot@users.noreply.github.com>
           token: ${{ secrets.CLA_TOKEN }}
           pr-token: ${{ secrets.CLA_PR_TOKEN }}
